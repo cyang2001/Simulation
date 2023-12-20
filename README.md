@@ -14,7 +14,7 @@ Ce project utilise Python pour simuler la technique d'imagerie par muons, spéci
 
 ## Instructions d'Installation  
 
-1. Cloner le dépôt: git clone https://github.com/cyang2001/Simulation.git  
+1. Cloner le dépôt: git clone <https://github.com/cyang2001/Simulation.git>
 2. Installer les dépendances: pip install -r requirements.txt  
 
 ## Mode d'Emploi  
@@ -26,6 +26,6 @@ Ce project utilise Python pour simuler la technique d'imagerie par muons, spéci
 ## Stack Technologique  
 
 - Python
-- Traitement de données(Numpy, Pandas ...)
+- Traitement de données(Numpy, Pandas, Scipy, Scikit-learn)
 - Modélisaton 3D(Blender)
 - Visualisation de données(Matplotlib)
