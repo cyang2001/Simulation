@@ -27,5 +27,5 @@ Ce project utilise Python pour simuler la technique d'imagerie par muons, spéci
 
 - Python
 - Traitement de données(Numpy, Pandas, Scipy, Scikit-learn)
-- Modélisaton 3D(Blender)
+- Modélisaton 3D(mpl_toolkits.mplot3d)
 - Visualisation de données(Matplotlib)

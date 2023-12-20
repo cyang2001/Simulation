@@ -1,0 +1,6 @@
+{
+  "cavity_center": [100, 100, 65],
+  "cavity_radius" :20,
+  "base_length" : 200,
+  "height" : 140
+}
