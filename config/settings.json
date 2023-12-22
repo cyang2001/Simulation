@@ -2,5 +2,8 @@
   "cavity_center": [100, 100, 65],
   "cavity_radius" :20,
   "base_length" : 200,
-  "height" : 140
+  "height" : 140,
+  "altitude" : 300000,
+  "energy_rate" :[0.1e9, 10e9],
+  "n_muons" : 10000
 }

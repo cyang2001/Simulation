@@ -1,4 +1,4 @@
-import pyramid_model
+import visualization;
 import os
 import json
 
@@ -13,5 +13,5 @@ with open(settings_path, 'r') as settings_file:
     settings = json.load(settings_file)  
 
 
-pyramid_model.plot_pyramid_model(settings=settings)
+visualization.visualize_pyramid(settings)
 
