@@ -17,40 +17,73 @@ class Pyramid:
     """
     self.base_length = base_length
     self.height = height
-    self.center = np.array([base_length / 2, base_length / 2, 0])  # 底面中心
+    self.center = np.array([base_length / 2, base_length / 2, 0])  
 
-  def is_inside(self, position):
+  def is_inside(self, point):
     """
-    Check if a given position is inside the pyramid.
+    Check if a given point is inside the pyramid.
 
     Parameters:
-    position (list): The coordinates of the position to check.
+    point (np.array): The coordinates of the point to check.
 
     Returns:
-    bool: True if the position is inside the pyramid, False otherwise.
+    bool: True if the point is inside the pyramid, False otherwise.
     """
-    x, y, z = position
-    if x >= 0 and x <= self.base_length and y >= 0 and y <= self.base_length and z >= 0 and z <= self.height:
-      return True
-    return False 
+    apex = np.array([self.base_length / 2, self.base_length / 2, self.height])
+    base_corners = [
+        np.array([0, 0, 0]),
+        np.array([self.base_length, 0, 0]),
+        np.array([self.base_length, self.base_length, 0]),
+        np.array([0, self.base_length, 0])
+    ]
+
+    # Calculate the volume of the pyramid
+    pyramid_volume = self.base_length ** 2 * self.height / 3
+
+    # Calculate the volume of the tetrahedra formed by the point and the faces of the pyramid
+    total_volume = 0
+    for i in range(4):
+        tetra_volume = np.abs(np.dot(np.cross(base_corners[i] - point, base_corners[(i + 1) % 4] - point), apex - point)) / 6
+        total_volume += tetra_volume
+
+    # Calculate the volume of the tetrahedra formed by the point and the base
+    base_triangle_1 = [base_corners[0], base_corners[1], base_corners[2]]
+    base_triangle_2 = [base_corners[2], base_corners[3], base_corners[0]]
+    for base_triangle in [base_triangle_1, base_triangle_2]:
+        base_tetra_volume = np.abs(np.dot(np.cross(base_triangle[1] - point, base_triangle[2] - point), base_triangle[0] - point)) / 6
+        total_volume += base_tetra_volume
+
+    # The point is inside if the total volume of tetrahedra is approximately equal to the pyramid volume
+    return np.isclose(total_volume, pyramid_volume, atol=1e-5)
+
+
 
   def path_length(self, position, direction):
-    """
-    Calculate the path length of a ray inside the pyramid.
+      """
+      Calculate the path length of a ray inside the pyramid.
 
-    Parameters:
-    position (list): The starting position of the ray.
-    direction (list): The direction of the ray.
+      Parameters:
+      position (np.array): The starting position of the ray.
+      direction (np.array): The direction of the ray.
 
-    Returns:
-    float: The path length of the ray inside the pyramid.
-    """
-    min_distance = np.inf
-    for face in self._pyramid_faces():
-      distance = self._intersect_face(face, position, direction)
-      if distance is not None and distance < min_distance:
-        min_distance = distance
-    return min_distance
+      Returns:
+      float: The path length of the ray inside the pyramid.
+      """
+      intersection_distances = []
+      for face in self._pyramid_faces():
+          distance = self._intersect_face(face, position, direction)
+          if distance is not None:
+              intersection_distances.append(distance)
+
+      if len(intersection_distances) >= 2:
+          # Get the smallest and largest distances which represent the entry and exit points
+          entry_distance = min(intersection_distances)
+          exit_distance = max(intersection_distances)
+          return exit_distance - entry_distance
+      else:
+          return 0  # Handle cases with fewer than 2 intersections appropriately
+
+
 
   def _pyramid_faces(self):
     """
@@ -67,40 +100,40 @@ class Pyramid:
       np.array([self.base_length, self.base_length, 0]),
       np.array([0, self.base_length, 0])
     ]
-    return [(apex, base_corners[i], base_corners[(i + 1) % 4]) for i in range(4)]
+    base_faces = [(base_corners[0], base_corners[1], base_corners[2]),
+                  (base_corners[0], base_corners[2], base_corners[3])]
+    return [(apex, base_corners[i], base_corners[(i + 1) % 4]) for i in range(4)] + base_faces
+  
 
   def _intersect_face(self, face, position, direction):
-    """
-    Calculate the intersection point of a ray with a face of the pyramid.
+      # Extract the points of the face (triangle)
+      apex, corner1, corner2 = face
 
-    Parameters:
-    face (tuple): A tuple representing a face of the pyramid.
-    position (list): The starting position of the ray.
-    direction (list): The direction of the ray.
+      # Compute the normal vector to the face
+      normal = np.cross(corner2 - corner1, apex - corner1)
+      normal = normal / np.linalg.norm(normal)  # Normalize the normal vector
 
-    Returns:
-    float: The distance from the starting position to the intersection point,
-    or None if there is no intersection.
-    """
-    apex, corner1, corner2 = face
-    normal = np.cross(corner1 - apex, corner2 - apex)
-    normal /= np.linalg.norm(normal) 
+      # Check if the ray is parallel to the face
+      dot_product = np.dot(normal, direction)
+      if np.isclose(dot_product, 0, atol=1e-6):
+          return None  # Ray is parallel, no intersection
 
-    # plane equation：Ax + By + Cz + D = 0
-    D = -np.dot(normal, apex)
-    denominator = np.dot(normal, direction)
-    if denominator == 0:  # parallel to the plane
+      # Calculate the intersection parameter
+      t = np.dot(normal, corner1 - position) / dot_product
+      if t < 0:
+          return None  # Intersection behind the ray's start, ignore
+
+      # Calculate the intersection point
+      intersect_point = position + [t * d for d in direction]
+
+      # Check if the intersection point is within the triangle
+      if self._point_in_triangle(intersect_point, apex, corner1, corner2):
+          return t
+
       return None
 
-    t = -(np.dot(normal, position) + D) / denominator
-    if t < 0:  # only consider the intersection in front of the muon
-      return None
 
-    # check if the intersection is inside the triangle
-    intersect_point = position + t * direction
-    if self._point_in_triangle(intersect_point, apex, corner1, corner2):
-      return t
-    return None
+
 
   def _point_in_triangle(self, point, vertex1, vertex2, vertex3):
     """
@@ -142,7 +175,7 @@ class Cavity:
     """
     self.cavity_center = cavity_center
     self.cavity_radius = cavity_radius
-  def is_inside(self, position, direction):
+  def does_ray_intersect(self, position, direction):
     """
     Check if a ray intersects with the cavity.
 
