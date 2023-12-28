@@ -4,7 +4,7 @@ import sys
 
 from BeautifulReport import BeautifulReport
 sys.path.append('/Users/gregyoungforever/Documents/ISEP2023-2024/Simulation/src')
-from pyramid_model import Pyramid, Cavity
+from pyramid_model import Pyramid, Cavity , Chamber , GrandGallery
 
 class TestPyramid(unittest.TestCase):
     @classmethod
@@ -61,15 +61,79 @@ class TestCavity(unittest.TestCase):
         direction = [1, 0, 0]  # Direction vector pointing away from the cavity
         self.assertFalse(self.cavity.does_ray_intersect(position, direction), "Ray should not intersect the cavity")
     
+class TestChamber(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.center = [100, 100, 50]
+        cls.dimensions = [20, 30, 40]
+
+    def setUp(self):
+        self.chamber = Chamber(self.center, self.dimensions)
+
+    def test_ray_intersects_chamber(self):
+        # Test a ray intersecting the chamber
+        position = [90, 100, 50]  # A point along the x-axis of the chamber's center
+        direction = [1, 0, 0]  # Direction vector pointing towards the chamber
+        self.assertTrue(self.chamber.does_ray_intersect(position, direction), "Ray should intersect the chamber")
+
+    def test_ray_misses_chamber(self):
+        # Test a ray missing the chamber
+        position = [150, 150, 150]  # A point outside the chamber
+        direction = [0, 1, 0]  # Direction vector parallel to one face of the chamber and missing it
+        self.assertFalse(self.chamber.does_ray_intersect(position, direction), "Ray should not intersect the chamber")
+
+    def test_path_length_through_chamber(self):
+        # Test path length for a ray passing straight through the chamber
+        position = [90, 100, 50]
+        direction = [1, 0, 0]
+        expected_length = self.dimensions[0]  # The ray passes through the entire x-dimension
+        actual_length = self.chamber.path_length(position, direction)
+        self.assertAlmostEqual(actual_length, expected_length, msg="Path length should match chamber x-dimension")
+
+
+class TestGrandGallery(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.base_center = [100, 200, 100]
+        cls.height = 5
+        cls.length = 50
+        cls.width_bottom = 10
+        cls.width_top = 15
+        cls.incline_angle = 26.5
+
+    def setUp(self):
+        self.grand_gallery = GrandGallery(self.base_center, self.height, self.length,
+                                          self.width_bottom, self.width_top, self.incline_angle)
+
+    def test_ray_intersects_grand_gallery(self):
+        # Test a ray intersecting the inclined grand gallery
+        position = [115, 200, 120]  # A point in front of the gallery's base center
+        direction = [0, -1, -1]  # Direction vector pointing towards the gallery's incline
+        self.assertTrue(self.grand_gallery.does_ray_intersect(position, direction), "Ray should intersect the Grand Gallery")
+
+    def test_ray_misses_grand_gallery(self):
+        # Test a ray missing the grand gallery
+        position = [100, 300, 120]
+        direction = [0, -1, 0]  # Direction vector pointing away from the gallery
+        self.assertFalse(self.grand_gallery.does_ray_intersect(position, direction), "Ray should not intersect the Grand Gallery")
+
+    
+
 
 if __name__ == '__main__':
-  testClass = [TestPyramid, TestCavity]
+  testClass = [TestPyramid, TestCavity, TestChamber, TestGrandGallery]
   for i in range(testClass.__len__()):
     suit = unittest.TestSuite()
     suit.addTest(unittest.makeSuite(testClass[i]))
     report_path = os.getcwd() + '/testReport'
     run = BeautifulReport(suit)
+
     if i == 0:
       run.report(filename = "test of pyramid model", description = "test of pramid model", report_dir = report_path)
-    else:
+    if i == 1:
       run.report(filename = "test of cavity model", description = "test of cavity model", report_dir = report_path)
+    if i == 2:
+      run.report(filename = "test of chamber model", description = "test of chamber model", report_dir = report_path)
+    if i == 3:
+      run.report(filename = "test of grand gallery model", description = "test of grand gallery model", report_dir = report_path)
+    

@@ -132,9 +132,6 @@ class Pyramid:
 
       return None
 
-
-
-
   def _point_in_triangle(self, point, vertex1, vertex2, vertex3):
     """
     Check if a point is inside a triangle.
@@ -159,6 +156,161 @@ class Pyramid:
     has_pos = (d1 > 0) or (d2 > 0) or (d3 > 0)
 
     return not (has_neg and has_pos)
+# do not use this class
+# its too complicated
+class Chamber:
+    def __init__(self, center, dimensions):
+        self.center = np.array(center)
+        self.dimensions = dimensions  # dimensions = [width, depth, height]
+
+    def does_ray_intersect(self, position, direction):
+        # This method checks for intersection with an axis-aligned bounding box
+        # defined by the chamber center and dimensions.
+        # 'position' is the ray origin, and 'direction' is the normalized ray direction.
+        min_bound = self.center - [d/2 for d in self.dimensions] 
+        max_bound = self.center + [d/2 for d in self.dimensions]
+
+        # Initialize variables to keep track of the intersection
+        t_min = 0
+        t_max = np.inf
+
+        # Check for intersection with each slab
+        for i in range(3):
+            if direction[i] != 0:
+                t1 = (min_bound[i] - position[i]) / direction[i]
+                t2 = (max_bound[i] - position[i]) / direction[i]
+                t_min = max(t_min, min(t1, t2))
+                t_max = min(t_max, max(t1, t2))
+            else:
+                # Check if the ray is parallel to the slab and outside the bounds
+                if position[i] < min_bound[i] or position[i] > max_bound[i]:
+                    return False
+
+        return t_max >= t_min and t_max > 0
+
+    def path_length(self, position, direction):
+        # Assuming does_ray_intersect(position, direction) returns True,
+        # calculate the path length through the chamber.
+
+        min_bound = self.center - [d/2 for d in self.dimensions] 
+        max_bound = self.center + [d/2 for d in self.dimensions] 
+
+        t_min = 0
+        t_max = np.inf
+
+        # Check for intersection with each slab
+        for i in range(3):
+            if direction[i] != 0:
+                t1 = (min_bound[i] - position[i]) / direction[i]
+                t2 = (max_bound[i] - position[i]) / direction[i]
+                t_min = max(t_min, min(t1, t2))
+                t_max = min(t_max, max(t1, t2))
+
+        if t_max < t_min or t_min < 0:
+            return 0  # No intersection or intersection behind the ray
+
+        return t_max - t_min
+# do not use this class
+# its too complicated
+class GrandGallery:
+    def __init__(self, base_center, height, length, width_bottom, width_top, incline_angle):
+        self.base_center = np.array(base_center)
+        self.height = height
+        self.length = length
+        self.width_bottom = width_bottom
+        self.width_top = width_top
+        self.incline_angle = incline_angle
+        self.calculate_normals()
+
+    def calculate_normals(self):
+        self.incline_normal = np.array([0, np.cos(np.radians(self.incline_angle)), -np.sin(np.radians(self.incline_angle))])
+        self.bottom_normal = np.array([0, -1, 0])
+        self.top_normal = np.array([0, 1, 0])
+        self.side_normals = [
+            np.cross(self.incline_normal, [1, 0, 0]),  
+            np.cross([1, 0, 0], self.incline_normal)   
+        ]
+
+    def does_ray_intersect(self, position, direction):
+        intersects = any(self.intersect_plane(position, direction, normal, point) for normal, point in self.get_planes())
+        return intersects
+
+    def get_planes(self):
+        yield self.incline_normal, self.base_center
+        yield self.bottom_normal, self.base_center - np.array([0, self.height / 2, 0])
+        yield self.top_normal, self.base_center + np.array([0, self.height / 2, 0])
+        for normal in self.side_normals:
+            yield normal, self.base_center
+
+    def intersect_plane(self, position, direction, plane_normal, plane_point):
+        denom = np.dot(plane_normal, direction)
+        if np.isclose(denom, 0):
+            return False  
+        t = np.dot(plane_normal, plane_point - position) / denom
+        if t < 0:
+            return False  
+        intersect_point = position + t * direction
+
+        return self.is_within_bounds(intersect_point, plane_normal)
+
+    def is_within_bounds(self, intersect_point, plane_normal):
+
+        z_rel = intersect_point[2] - self.base_center[2]
+        
+
+        if np.isclose(np.dot(plane_normal, self.incline_normal), 1):
+            if not (-self.length / 2 <= z_rel <= self.length / 2):
+                return False
+            width_at_z = self.width_bottom + (z_rel / self.length) * (self.width_top - self.width_bottom)
+
+            x_min = self.base_center[0] - width_at_z / 2
+            x_max = self.base_center[0] + width_at_z / 2
+            return x_min <= intersect_point[0] <= x_max
+        elif np.isclose(np.dot(plane_normal, self.top_normal), 1):
+
+            if not (-self.length / 2 <= z_rel <= self.length / 2):
+                return False
+            x_min = self.base_center[0] - self.width_top / 2
+            x_max = self.base_center[0] + self.width_top / 2
+            return x_min <= intersect_point[0] <= x_max
+        elif np.isclose(np.dot(plane_normal, self.bottom_normal), 1):
+            
+            if not (-self.length / 2 <= z_rel <= self.length / 2):
+                return False
+            x_min = self.base_center[0] - self.width_bottom / 2
+            x_max = self.base_center[0] + self.width_bottom / 2
+            return x_min <= intersect_point[0] <= x_max
+        elif any(np.isclose(np.dot(plane_normal, side_normal), 1) for side_normal in self.side_normals):
+            if not (-self.width_bottom / 2 <= intersect_point[0] - self.base_center[0] <= self.width_bottom / 2):
+                return False
+            z_min = self.base_center[2] - self.length / 2
+            z_max = self.base_center[2] + self.length / 2
+            return z_min <= intersect_point[2] <= z_max
+        else:
+            
+            return False
+
+
+    def path_length(self, position, direction):
+        incline_direction = np.array([0, np.cos(np.radians(self.incline_angle)), np.sin(np.radians(self.incline_angle))])
+        length_direction = np.array([0, 1, 0])  
+        plane_normal = np.cross(incline_direction, length_direction)
+
+        if not self.does_ray_intersect(position, direction):
+            return 0
+
+
+        t_front = np.dot(self.base_center - position + np.array([0, self.length / 2, 0]), plane_normal) / np.dot(direction, plane_normal)
+        t_back = np.dot(self.base_center - position - np.array([0, self.length / 2, 0]), plane_normal) / np.dot(direction, plane_normal)
+
+
+        intersect_front = position + [t_front * d for d in direction]  
+        intersect_back = position + [t_back * d for d in direction]
+
+
+        return np.linalg.norm(intersect_front - intersect_back)
+
+
 
 
 class Cavity:
@@ -218,8 +370,8 @@ def initialize_pyramid_and_cavity(settings, to_file=None):
   """
   cavity_center = settings['cavity_center'] 
   cavity_radius = settings['cavity_radius']
-  base_length = settings['base_length']
-  height = settings['height']
+  base_length = settings['pyramid_base_length']
+  height = settings['pyramid_height']
   
   pyramid = Pyramid(base_length, height)
   cavity = Cavity(cavity_center, cavity_radius)

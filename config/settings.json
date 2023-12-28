@@ -1,9 +1,58 @@
 {
-  "cavity_center": [100, 100, 65],
+
+  // pyramid
+  // --------------------
+  "cavity_center": [115, 115, 85],
   "cavity_radius" :20,
-  "base_length" : 200,
-  "height" : 140,
-  "altitude" : 300000,
-  "energy_rate" :[0.1e9, 10e9],
-  "n_muons" : 10000
+  "pyramid_base_length" : 230,
+  "pyramid_height" : 139,
+  "pyramid_material_density": 2.2, // g/cm3
+  "pyramid_material_thickness_range": [65, 115], // m
+  // --------------------
+
+  // muons
+  // --------------------
+  "muon_altitude" : 300000,
+  "muon_energy_range" :[20, 1000], // GeV
+  "n_muons" : 10000,
+  "muon_energy_loss_per_g_cm2": 1.7, // Mev
+  "muon_radiation_length": 26.5, // g/cm2
+  "muon_step_size": 0.1, // m
+  "muon_mean_free_path": 0.1, // m
+  // --------------------
+
+  // not used
+  // --------------------
+  "queen_chamber_center": [112, 115, 32],
+  "queen_chamber_width": 8,
+  "queen_chamber_length": 8,
+  "queen_chamber_height": 8,
+  "grand_gallery_height": 6,
+  "grand_gallery_length": 47,
+  "grand_gallery_width_bottom": 4,
+  "grand_gallery_width_top": 4,
+  "grand_gallery_base_center": [115, 115, 47],
+  "grand_gallery_incline" : -19,
+  "king_chamber_center": [112, 105, 50],
+  "king_chamber_width": 10,
+  "king_chamber_length": 10,
+  "king_chamber_height": 14,
+  // --------------------
+
+  // detector
+  // --------------------
+  "detector_position_1": [115, 247, 0],
+  "detector_position_2": [112, 115, 32],
+  "detector_base_vectors_1": [
+                              [175, 175, 0],
+                              [55, 175, 0],
+                              [55, 175, 125],
+                              [175, 175, 125]] ,
+  "detector_base_vectors_2": [
+                              [175, 55, 125],
+                              [55, 55, 125],
+                              [55, 175, 125],
+                              [175, 175, 125]] ,
+
+
 }

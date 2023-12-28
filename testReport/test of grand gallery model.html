@@ -7159,42 +7159,50 @@ body.skin-3 {
 
 
     var resultData = {
-    "testPass": 3,
+    "testPass": 0,
     "testResult": [
         {
-            "className": "TestCavity",
-            "methodName": "test_ray_intersects_cavity",
+            "className": "TestGrandGallery",
+            "methodName": "test_ray_intersects_grand_gallery",
             "description": null,
-            "spendTime": "4.82e-05 s",
-            "status": "success",
+            "spendTime": "0.001 s",
+            "status": "Error",
             "log": [
-                ""
+                "",
+                "Traceback (most recent call last):\n",
+                "  File \"/opt/anaconda3/lib/python3.9/unittest/case.py\", line 59, in testPartExecutor\n    yield\n",
+                "  File \"/opt/anaconda3/lib/python3.9/unittest/case.py\", line 592, in run\n    self._callTestMethod(testMethod)\n",
+                "  File \"/opt/anaconda3/lib/python3.9/unittest/case.py\", line 550, in _callTestMethod\n    method()\n",
+                "  File \"/Users/gregyoungforever/Documents/ISEP2023-2024/Simulation/test/test_pramid_model.py\", line 112, in test_ray_intersects_grand_gallery\n    self.assertTrue(self.grand_gallery.does_ray_intersect(position, direction), \"Ray should intersect the Grand Gallery\")\n",
+                "  File \"/Users/gregyoungforever/Documents/ISEP2023-2024/Simulation/src/pyramid_model.py\", line 235, in does_ray_intersect\n    intersects = any(self.intersect_plane(position, direction, normal, point) for normal, point in self.get_planes())\n",
+                "  File \"/Users/gregyoungforever/Documents/ISEP2023-2024/Simulation/src/pyramid_model.py\", line 235, in <genexpr>\n    intersects = any(self.intersect_plane(position, direction, normal, point) for normal, point in self.get_planes())\n",
+                "  File \"/Users/gregyoungforever/Documents/ISEP2023-2024/Simulation/src/pyramid_model.py\", line 252, in intersect_plane\n    intersect_point = position + t * direction\n",
+                "TypeError: can't multiply sequence by non-int of type 'numpy.float64'\n"
             ]
         },
         {
-            "className": "TestCavity",
-            "methodName": "test_ray_on_cavity_surface",
+            "className": "TestGrandGallery",
+            "methodName": "test_ray_misses_grand_gallery",
             "description": null,
-            "spendTime": "2.26e-05 s",
-            "status": "success",
+            "spendTime": "0.000326 s",
+            "status": "Error",
             "log": [
-                ""
-            ]
-        },
-        {
-            "className": "TestCavity",
-            "methodName": "test_ray_outside_cavity",
-            "description": null,
-            "spendTime": "1.57e-05 s",
-            "status": "success",
-            "log": [
-                ""
+                "",
+                "Traceback (most recent call last):\n",
+                "  File \"/opt/anaconda3/lib/python3.9/unittest/case.py\", line 59, in testPartExecutor\n    yield\n",
+                "  File \"/opt/anaconda3/lib/python3.9/unittest/case.py\", line 592, in run\n    self._callTestMethod(testMethod)\n",
+                "  File \"/opt/anaconda3/lib/python3.9/unittest/case.py\", line 550, in _callTestMethod\n    method()\n",
+                "  File \"/Users/gregyoungforever/Documents/ISEP2023-2024/Simulation/test/test_pramid_model.py\", line 118, in test_ray_misses_grand_gallery\n    self.assertFalse(self.grand_gallery.does_ray_intersect(position, direction), \"Ray should not intersect the Grand Gallery\")\n",
+                "  File \"/Users/gregyoungforever/Documents/ISEP2023-2024/Simulation/src/pyramid_model.py\", line 235, in does_ray_intersect\n    intersects = any(self.intersect_plane(position, direction, normal, point) for normal, point in self.get_planes())\n",
+                "  File \"/Users/gregyoungforever/Documents/ISEP2023-2024/Simulation/src/pyramid_model.py\", line 235, in <genexpr>\n    intersects = any(self.intersect_plane(position, direction, normal, point) for normal, point in self.get_planes())\n",
+                "  File \"/Users/gregyoungforever/Documents/ISEP2023-2024/Simulation/src/pyramid_model.py\", line 252, in intersect_plane\n    intersect_point = position + t * direction\n",
+                "TypeError: can't multiply sequence by non-int of type 'numpy.float64'\n"
             ]
         }
     ],
-    "testName": "test of cavity model",
-    "testAll": 3,
-    "testFail": 0,
+    "testName": "test of grand gallery model",
+    "testAll": 2,
+    "testFail": 2,
     "beginTime": "2023-12-26 01:11:19",
     "totalTime": "0s",
     "testSkip": 0,
