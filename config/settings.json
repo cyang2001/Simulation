@@ -6,7 +6,7 @@
   "cavity_radius" :20,
   "pyramid_base_length" : 230,
   "pyramid_height" : 139,
-  "pyramid_material_density": 2.2, // g/cm3
+  "pyramid_material_density": [2.2, 2.4], // g/cm3
   "pyramid_material_thickness_range": [65, 115], // m
   // --------------------
 
@@ -18,7 +18,9 @@
   "muon_energy_loss_per_g_cm2": 1.7, // Mev
   "muon_radiation_length": 26.5, // g/cm2
   "muon_step_size": 0.1, // m
-  "muon_mean_free_path": 0.1, // m
+  "muon_mean_free_path": 100, // m
+  "muon_scattering_strength_in_cavity": 0.01,
+  "muon_scattering_strength_in_other_material": 0.05,
   // --------------------
 
   // not used

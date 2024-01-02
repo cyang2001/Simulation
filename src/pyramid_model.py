@@ -56,7 +56,18 @@ class Pyramid:
     # The point is inside if the total volume of tetrahedra is approximately equal to the pyramid volume
     return np.isclose(total_volume, pyramid_volume, atol=1e-5)
 
+  def calculate_length(self, position_1, position_2):
+    """
+    Calculate the length between two points.
 
+    Parameters:
+    position_1 (np.array): The coordinates of the first point.
+    position_2 (np.array): The coordinates of the second point.
+
+    Returns:
+    float: The length between the two points.
+    """
+    return np.linalg.norm(np.array(position_1) - np.array(position_2))
 
   def path_length(self, position, direction):
       """
@@ -327,6 +338,19 @@ class Cavity:
     """
     self.cavity_center = cavity_center
     self.cavity_radius = cavity_radius
+  def is_inside(self, position):
+        """
+        Check if a given point is inside the cavity.
+
+        Parameters:
+        position (np.array): The coordinates of the point to check.
+
+        Returns:
+        bool: True if the point is inside the cavity, False otherwise.
+        """
+        distance = np.linalg.norm(np.array(position) - np.array(self.cavity_center))
+
+        return distance < self.cavity_radius
   def does_ray_intersect(self, position, direction):
     """
     Check if a ray intersects with the cavity.

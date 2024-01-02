@@ -47,19 +47,19 @@ class TestCavity(unittest.TestCase):
         # Test a ray intersecting the cavity
         position = [80, 80, 65]  # A point outside the cavity
         direction = [1, 1, 0]  # Direction vector towards the cavity center
-        self.assertTrue(self.cavity.does_ray_intersect(position, direction), "Ray should intersect the cavity")
+        self.assertTrue(self.cavity.is_inside(position, direction), "Ray should intersect the cavity")
 
     def test_ray_on_cavity_surface(self):
         # Test a ray on the surface of the cavity
         position = [100, 120, 65]  # A point on the surface of the cavity
         direction = [0, -1, 0]  # Direction vector pointing away from the cavity center
-        self.assertTrue(self.cavity.does_ray_intersect(position, direction), "Ray on cavity surface should intersect the cavity")
+        self.assertTrue(self.cavity.is_inside(position, direction), "Ray on cavity surface should intersect the cavity")
 
     def test_ray_outside_cavity(self):
         # Test a ray outside and not intersecting the cavity
         position = [150, 150, 65]  # A point outside the cavity
         direction = [1, 0, 0]  # Direction vector pointing away from the cavity
-        self.assertFalse(self.cavity.does_ray_intersect(position, direction), "Ray should not intersect the cavity")
+        self.assertFalse(self.cavity.is_inside(position, direction), "Ray should not intersect the cavity")
     
 class TestChamber(unittest.TestCase):
     @classmethod

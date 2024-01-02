@@ -6,8 +6,13 @@ class MuonDetector:
         self.base_vectors = settings[f'detector_base_vectors_{nth_detector}']
         self.apex = np.array(self.position)
         self.detected_muons = []  
-        self.base_area = self.base_vectors[0][0] * self.base_vectors[1][0]
-        self.height = self.base_vectors[0][2] - self.position[2]
+        if nth_detector == 1:
+            
+            self.base_area = 120 * 125
+            self.height = 247 - 175
+        else:
+            self.base_area = 120 * 120
+            self.height = 125 - 32
     def is_inside(self, point):
         """
         Check if a given point is inside the pyramid.
@@ -54,7 +59,8 @@ class MuonDetector:
         Returns:
         bool: True if the muon is detected, False otherwise.
         """
-        if self.is_inside(muon.position):
+        position, _ , _ = muon
+        if self.is_inside(position):
             detection_probability = 0.95  
             if np.random.random() < detection_probability:
                 self.detected_muons.append(muon)

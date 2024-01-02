@@ -39,7 +39,7 @@ class TestMuonSimulator(unittest.TestCase):
   def test_simulate_muons_trajectory(self):
     self.pyramid.is_inside = Mock(return_value = True)
     self.pyramid.path_length = Mock(return_value = 100)
-    self.cavity.does_ray_intersect = Mock(return_value = True)
+    self.cavity.is_inside = Mock(return_value = True)
 
     muon = (np.array([self.pyramid.base_length/2, self.pyramid.base_length/2, self.altitude]), np.array([0, 0, -1]), 500)
     result = self.simulator.simulate_muons_trajectory(muon)
@@ -64,7 +64,7 @@ class TestMuonSimulator(unittest.TestCase):
   def test_simulate_muons_trajectory_absorbed(self):
     self.pyramid.is_inside = Mock(return_value = True)
     self.pyramid.path_length = Mock(return_value = 1000000)
-    self.cavity.does_ray_intersect = Mock(return_value = False)
+    self.cavity.is_inside = Mock(return_value = False)
     muon = (np.array([self.pyramid.base_length/2, self.pyramid.base_length/2, self.altitude]), np.array([0, 0, -1]), 500)
     result = self.simulator.simulate_muons_trajectory(muon)
     intersects, _, energy = result

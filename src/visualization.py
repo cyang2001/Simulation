@@ -159,6 +159,14 @@ def visualize_pyramid(settings):
     z = cavity_center[2] + cavity_radius * np.cos(v)
     ax.plot_wireframe(x, y, z, color="r")
 
+
+    ## test
+    t_1 = [100.87951363,  63.81758502,  77.13603754]
+    t_2 = [104.22268028,  75.93553467,  75.32812913]
+    ax.scatter(*t_1, color='green', s=50)
+    ax.scatter(*t_2, color='green', s=50)
+
+
     # Set labels and limits
     ax.set_xlabel('X Axis')
     ax.set_ylabel('Y Axis')
@@ -169,3 +177,4 @@ def visualize_pyramid(settings):
     ax.set_zlim(0, height + 50)
 
     plt.show()
+
