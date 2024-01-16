@@ -17,7 +17,7 @@ def run_simulation():
       settings = json5.load(settings_file)  
 
 
-  # visualization.visualize_pyramid(settings)
+  #visualization.visualize_pyramid(settings)
 
   pyramid, cavity = pyramid_model.initialize_pyramid_and_cavity(settings)
 
@@ -27,10 +27,10 @@ def run_simulation():
   muon_detectors = [muon_detector_1, muon_detector_2]
   muon_simulation = MuonSimulator(settings, pyramid, cavity, muon_detectors)
   res = muon_simulation.simulate_muons_parallel(1600)
-  return res
+  #return res
 if __name__ == '__main__':
   run_simulation()
-  res = run_simulation()
+  #res = run_simulation()
   #print(res)
 
 

@@ -95,13 +95,13 @@ def visualize_pyramid(settings):
         [king_chamber_vertices[3], king_chamber_vertices[0], king_chamber_vertices[4], king_chamber_vertices[7]]   
     ]
     pyramid = Poly3DCollection(pyramid_faces, facecolors='blue', linewidths=1, edgecolors='r', alpha=.25)
-    queen_chamber = Poly3DCollection(queen_chamber_faces, facecolors = 'green', linewidths=1, edgecolors = 'b', alpha=.25)
-    grand_gallery = Poly3DCollection(grand_gallery_faces, facecolors='grey', linewidths=1, edgecolors='b', alpha=.25)
-    king_chamber = Poly3DCollection(king_chamber_faces,facecolors = 'green', linewidths=1,edgecolors = 'b',alpha=.25 )
+    #queen_chamber = Poly3DCollection(queen_chamber_faces, facecolors = 'green', linewidths=1, edgecolors = 'b', alpha=.25)
+    #grand_gallery = Poly3DCollection(grand_gallery_faces, facecolors='grey', linewidths=1, edgecolors='b', alpha=.25)
+    #king_chamber = Poly3DCollection(king_chamber_faces,facecolors = 'green', linewidths=1,edgecolors = 'b',alpha=.25 )
     ax.add_collection3d(pyramid)
-    ax.add_collection3d(queen_chamber)
-    ax.add_collection3d(grand_gallery)
-    ax.add_collection3d(king_chamber)
+    #ax.add_collection3d(queen_chamber)
+    #ax.add_collection3d(grand_gallery)
+    #ax.add_collection3d(king_chamber)
     # Define and plot the test point
     # test_point = [50, 50, 50]
     # test_lane = [115, 200, 120]
@@ -131,9 +131,9 @@ def visualize_pyramid(settings):
         [detector_position_1[0], detector_position_1[1], detector_position_1[2]]
     ])
 
-    detector_faces_1 = [(detector_vertices_1[4], detector_vertices_1[i], detector_vertices_1[(i + 1) % 4]) for i in range(4)]
-    detector_1 = Poly3DCollection(detector_faces_1, facecolors='blue', linewidths=1, edgecolors='r', alpha=.25)
-    ax.add_collection3d(detector_1)
+    #detector_faces_1 = [(detector_vertices_1[4], detector_vertices_1[i], detector_vertices_1[(i + 1) % 4]) for i in range(4)]
+    #detector_1 = Poly3DCollection(detector_faces_1, facecolors='blue', linewidths=1, edgecolors='r', alpha=.25)
+    #ax.add_collection3d(detector_1)
 
     # Define detector vertices by the data of the article
     detector_vertices_2 = np.array([
@@ -144,14 +144,14 @@ def visualize_pyramid(settings):
         [detector_position_2[0], detector_position_2[1], detector_position_2[2]]
     ])
 
-    detector_faces_2 = [(detector_vertices_2[4], detector_vertices_2[i], detector_vertices_2[(i + 1) % 4]) for i in range(4)]
-    detector_2 = Poly3DCollection(detector_faces_2, facecolors='blue', linewidths=1, edgecolors='r', alpha=.25)
-    ax.add_collection3d(detector_2)
+    #detector_faces_2 = [(detector_vertices_2[4], detector_vertices_2[i], detector_vertices_2[(i + 1) % 4]) for i in range(4)]
+    #detector_2 = Poly3DCollection(detector_faces_2, facecolors='blue', linewidths=1, edgecolors='r', alpha=.25)
+    #ax.add_collection3d(detector_2)
 
-    test_point_1 = [115, 247, 0]
-    test_point_2 = [112, 115, 32]
-    ax.scatter(*test_point_1, color='green', s=50)
-    ax.scatter(*test_point_2, color='green', s=50)
+    #test_point_1 = [115, 247, 0]
+    #test_point_2 = [112, 115, 32]
+    #ax.scatter(*test_point_1, color='green', s=50)
+    #ax.scatter(*test_point_2, color='green', s=50)
     # Plot the cavity
     u, v = np.mgrid[0:2*np.pi:20j, 0:np.pi:10j]
     x = cavity_center[0] + cavity_radius * np.cos(u) * np.sin(v)
@@ -161,10 +161,10 @@ def visualize_pyramid(settings):
 
 
     ## test
-    t_1 = [100.87951363,  63.81758502,  77.13603754]
-    t_2 = [104.22268028,  75.93553467,  75.32812913]
-    ax.scatter(*t_1, color='green', s=50)
-    ax.scatter(*t_2, color='green', s=50)
+    #t_1 = [100.87951363,  63.81758502,  77.13603754]
+    #t_2 = [104.22268028,  75.93553467,  75.32812913]
+    #ax.scatter(*t_1, color='green', s=50)
+    #ax.scatter(*t_2, color='green', s=50)
 
 
     # Set labels and limits
